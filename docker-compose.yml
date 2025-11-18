@@ -1,0 +1,15 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    image: draftgame-backend:latest
+    ports:
+      - "8081:8081"
+  frontend:
+    build:
+      context: ./frontend
+    image: draftgame-frontend:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend

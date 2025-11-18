@@ -1,28 +1,32 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+# OS / IDE noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+# Node / Angular artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/*.tsbuildinfo
 
-# Environment files
-/.env
+# Rust build output
+backend/target/
 
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Logs
+# Misc build caches
+.tmp/
+tmp/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+
+# Docker / compose leftovers
+*.env.local
+*.env.development
+*.env.test
