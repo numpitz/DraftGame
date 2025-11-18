@@ -81,6 +81,51 @@ When using the legacy `docker-compose` binary, prefer the helper script which cl
 ./scripts/docker-up.sh
 ```
 
+### Starting the Docker daemon on WSL/Ubuntu
+
+The `docker` CLI needs the daemon (`dockerd`) running in the background. On WSL distributions you can start it manually:
+
+```bash
+sudo service docker start
+# or
+sudo systemctl start docker
+```
+
+If you want the daemon to boot automatically whenever the distro starts, enable the service:
+
+```bash
+sudo systemctl enable docker
+```
+
+Make sure your user is part of the `docker` group (`sudo usermod -aG docker $USER`) and restart your shell so `docker compose up --build` can run without `sudo`.
+
+### Upgrading to the modern Docker engine + compose plugin
+
+The easiest way to skip the helper script is to replace the `apt install docker.io` packages with Docker’s official repository. The plugin-based workflow works seamlessly on WSL/Ubuntu:
+
+```bash
+sudo apt remove docker docker.io docker-compose docker-doc podman-docker containerd runc
+sudo apt update
+sudo apt install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+After installation:
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker   # or restart your shell
+docker compose version
+```
+
+You can now run `docker compose up --build` without the `.env` overrides or helper script, and the BuildKit tooling/remotes/credentials will work as expected.
+
 This command builds both images, starts the Axum API on port 8081, and serves the production Angular bundle via Nginx on port 8080. The Nginx config forwards `/api` traffic to the backend service so the browser never needs to know separate hosts.
 
 ### Docker image details
